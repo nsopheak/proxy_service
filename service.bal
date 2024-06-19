@@ -25,12 +25,8 @@ service / on new http:Listener(8088) {
     resource function get [string ...paths](http:Caller caller, http:Request req) returns error? {
         log:printInfo("Received GET request for : " + req.rawPath);
         string contextPath = check resolveContextPath(req.rawPath);
-        log:printInfo("Received GET request for contextPath : " + contextPath);
         http:Client 'client = check getClient(contextPath);
-        // string url = processRequestPath(req.rawPath);
-        string url = req.rawPath.substring(contextPath.length());
-        log:printInfo("Received GET request for URL : " + url);
-        http:Response clientResponse = check 'client->execute(req.method, url, req);
+        http:Response clientResponse = check 'client->execute(req.method, processRequestPath(req.rawPath, contextPath), req);
         return replyToCaller(caller, clientResponse);
     }
 
@@ -38,7 +34,7 @@ service / on new http:Listener(8088) {
         log:printInfo("Received POST request for : " + req.rawPath);
         string contextPath = check resolveContextPath(req.rawPath);
         http:Client 'client = check getClient(contextPath);
-        http:Response clientResponse = check 'client->execute(req.method, processRequestPath(req.rawPath), req);
+        http:Response clientResponse = check 'client->execute(req.method, processRequestPath(req.rawPath, contextPath), req);
         return replyToCaller(caller, clientResponse);
     }
 }
@@ -73,4 +69,8 @@ function replyToCaller(http:Caller caller, http:Response clientResponse) returns
     check caller->respond(clientResponse);
 }
 
-function processRequestPath(string rawPath) returns string => re `^.*/`.replace(rawPath, "/");
+// function processRequestPath(string rawPath) returns string => re `^.*/`.replace(rawPath, "/");
+
+function processRequestPath(string rawPath, string contextPath) returns string {
+    return rawPath.substring(contextPath.length());
+}
