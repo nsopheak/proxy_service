@@ -26,6 +26,8 @@ service / on new http:Listener(8088) {
         log:printInfo("Received GET request for : " + req.rawPath);
         string contextPath = check resolveContextPath(req.rawPath);
         http:Client 'client = check getClient(contextPath);
+        EndpointConfig endpointConfig = check getEndpointConfig(contextPath);
+        log:printInfo("Received GET Base url : " + endpointConfig.backendServiceEp);
         http:Response clientResponse = check 'client->execute(req.method, processRequestPath(req.rawPath, contextPath), req);
         return replyToCaller(caller, clientResponse);
     }
