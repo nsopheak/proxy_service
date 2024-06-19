@@ -1,0 +1,9 @@
+[package]
+org = "nsp"
+name = "proxy_service"
+version = "0.1.0"
+distribution = "2201.5.5"
+
+[build-options]
+observabilityIncluded = true
+
