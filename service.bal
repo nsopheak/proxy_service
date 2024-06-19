@@ -72,5 +72,7 @@ function replyToCaller(http:Caller caller, http:Response clientResponse) returns
 // function processRequestPath(string rawPath) returns string => re `^.*/`.replace(rawPath, "/");
 
 function processRequestPath(string rawPath, string contextPath) returns string {
-    return rawPath.substring(contextPath.length());
+    string path = rawPath.substring(contextPath.length());
+    log:printInfo("Received GET path : " + path);
+    return path;
 }
