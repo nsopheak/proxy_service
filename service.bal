@@ -62,10 +62,4 @@ function replyToCaller(http:Caller caller, http:Response clientResponse) returns
     check caller->respond(clientResponse);
 }
 
-function processRequest(EndpointConfig endpointConfig, http:Request req) returns error? {
-    
-    req.setBinaryPayload(decryptedPayload, contentType = "application/json");
-
-}
-
 function processRequestPath(string rawPath) returns string => re `^.*/`.replace(rawPath, "/");
