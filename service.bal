@@ -29,7 +29,7 @@ service / on new http:Listener(8088) {
         http:Client 'client = check getClient(contextPath);
         string url = processRequestPath(req.rawPath);
         log:printInfo("Received GET request for URL : " + url);
-        http:Response clientResponse = check 'client->execute(req.method, "https://pet/findByStatus?status=available", req);
+        http:Response clientResponse = check 'client->execute(req.method, "/pet/findByStatus?status=available", req);
         return replyToCaller(caller, clientResponse);
     }
 
