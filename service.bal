@@ -25,9 +25,10 @@ service / on new http:Listener(8088) {
     resource function get [string ...paths](http:Caller caller, http:Request req) returns error? {
         log:printInfo("Received GET request for : " + req.rawPath);
         string contextPath = check resolveContextPath(req.rawPath);
+        log:printInfo("Received GET request for contextPath : " + contextPath);
         http:Client 'client = check getClient(contextPath);
-        EndpointConfig endpointConfig = check getEndpointConfig(contextPath);
-    
+        string url = processRequestPath(req.rawPath);
+        log:printInfo("Received GET request for URL : " + url);
         http:Response clientResponse = check 'client->execute(req.method, processRequestPath(req.rawPath), req);
         return replyToCaller(caller, clientResponse);
     }
@@ -36,7 +37,6 @@ service / on new http:Listener(8088) {
         log:printInfo("Received POST request for : " + req.rawPath);
         string contextPath = check resolveContextPath(req.rawPath);
         http:Client 'client = check getClient(contextPath);
-        EndpointConfig endpointConfig = check getEndpointConfig(contextPath);
         http:Response clientResponse = check 'client->execute(req.method, processRequestPath(req.rawPath), req);
         return replyToCaller(caller, clientResponse);
     }
