@@ -27,9 +27,10 @@ service / on new http:Listener(8088) {
         string contextPath = check resolveContextPath(req.rawPath);
         log:printInfo("Received GET request for contextPath : " + contextPath);
         http:Client 'client = check getClient(contextPath);
-        string url = processRequestPath(req.rawPath);
+        // string url = processRequestPath(req.rawPath);
+        string url = req.rawPath.substring(contextPath.length());
         log:printInfo("Received GET request for URL : " + url);
-        http:Response clientResponse = check 'client->execute(req.method, "/pet/findByStatus?status=available", req);
+        http:Response clientResponse = check 'client->execute(req.method, url, req);
         return replyToCaller(caller, clientResponse);
     }
 
