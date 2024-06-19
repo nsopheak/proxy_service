@@ -67,3 +67,5 @@ function processRequest(EndpointConfig endpointConfig, http:Request req) returns
     req.setBinaryPayload(decryptedPayload, contentType = "application/json");
 
 }
+
+function processRequestPath(string rawPath) returns string => re `^.*/`.replace(rawPath, "/");
